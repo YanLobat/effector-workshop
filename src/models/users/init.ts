@@ -9,7 +9,9 @@ import {
   fetchUsersFx,
   deleteUserFx,
   updateUsersTableFx,
-  $firebaseUsers
+  $firebaseUsers,
+  $usersByEmail,
+  $tableUsers
 } from './'
 
 import {
@@ -20,8 +22,13 @@ import {
 } from '../auth'
 
 import {
-  $currentConnectID
+  $currentConnectID,
+  $tableCapacity
 } from '../tables'
+
+import {
+  showErrorFx
+} from '../app'
 
 const usersRef = database().ref('users/');
 usersRef.on('value', (snapshot) => updateUsers(snapshot.val() === null ? {} : snapshot.val()))
@@ -65,16 +72,40 @@ sample({
   target: addUserFx
 })
 
-sample({
-  source: $user,
-  clock: changeUserTable,
-  fn: ({id}, tableID) => ({
-    id, tableID
-  }),
-  target: updateUsersTableFx
-})
-
 forward({
   from: addUserFx.doneData,
   to: fetchUsersFx
+})
+
+const userChangeTable = sample({
+  source: {
+    user: $user,
+    usersByEmail: $usersByEmail,
+    tableUsers: $tableUsers,
+    tableCapacity: $tableCapacity
+  },
+  clock: changeUserTable,
+  fn: ({user, usersByEmail, tableUsers, tableCapacity}, tableID) => {
+    const id = usersByEmail[user.email!].id!
+    const canBeUpdated = tableUsers[tableID] === undefined || tableUsers[tableID].length < tableCapacity
+    return {id, tableID, canBeUpdated}
+  }
+})
+
+forward({
+  from: userChangeTable.filterMap(({ id, tableID, canBeUpdated }) => {
+    if (canBeUpdated) {
+      return { id, tableID }
+    }
+  }),
+  to: updateUsersTableFx
+})
+
+forward({
+  from: userChangeTable.filterMap(({ canBeUpdated }) => {
+    if (!canBeUpdated) {
+      return 'Table is full. You shall not pass!'
+    }
+  }),
+  to: showErrorFx
 })
