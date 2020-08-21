@@ -27,3 +27,10 @@ initAppFx.use(async ({
     storageBucket: `${projectId}.appspot.com`
   })
 })
+
+initAppFx({
+  appId,
+  projectId,
+  apiKey,
+  messagingSenderId
+})
