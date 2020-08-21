@@ -5,11 +5,11 @@ import {
   $currentConnectID,
   $tableIDs,
   $stage
-} from './'
+} from './index'
 
 import {
   $tableUsers
-} from '../users'
+} from '../users/index'
 
 sample({
   source: {

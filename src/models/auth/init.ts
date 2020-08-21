@@ -15,7 +15,9 @@ import {
 
 import {
   addUserFx,
-  updateUsersTableFx
+  updateUsersTableFx,
+  deleteUserFx,
+  $firebaseUsers
 } from '../users'
 
 const gProvider = new auth.GoogleAuthProvider()
@@ -77,4 +79,16 @@ forward({
     }
   }),
   to: signUpViaEmailFx
+})
+
+sample({
+  source: $firebaseUsers,
+  clock: logout,
+  //@ts-ignore
+  fn: (users, email) => Object.keys(users).find((id) => {
+    if (email === users[id].email) {
+      return id
+    }
+  }),
+  target: deleteUserFx
 })

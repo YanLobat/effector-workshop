@@ -26,3 +26,17 @@ export const $usersByEmail = $firebaseUsers.map((fUsers) => {
     }
   }, {})
 })
+
+export const $tableUsers = $firebaseUsers.map((fUsers) => {
+  return Object.keys(fUsers).reduce<TableIDUsersMap>((tableUsers, id) => {
+    const tableID = fUsers[id].tableID;
+    if (tableUsers[tableID] !== undefined) {
+      tableUsers[tableID].push(fUsers[id]);
+      return tableUsers;
+    }
+    return {
+      ...tableUsers,
+      [tableID]: [fUsers[id]]
+    }
+  }, {})
+})

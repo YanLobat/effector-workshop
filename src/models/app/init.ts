@@ -1,8 +1,11 @@
 import { initializeApp } from 'firebase'
+import { forward } from 'effector'
 
 import {
-  initAppFx
+  initAppFx, AppGate
 } from './'
+
+import { fetchUsersFx } from '../users'
 
 import {
   appId,
@@ -10,6 +13,7 @@ import {
   apiKey,
   messagingSenderId
 } from '../../../config.json'
+
 
 initAppFx.use(async ({
   appId,
@@ -33,4 +37,9 @@ initAppFx({
   projectId,
   apiKey,
   messagingSenderId
+})
+
+forward({
+  from: AppGate.open,
+  to: fetchUsersFx
 })
