@@ -2,7 +2,7 @@ import { initializeApp } from 'firebase'
 import { forward } from 'effector'
 
 import {
-  initAppFx, showErrorFx, AppGate, Route
+  app, initAppFx, showErrorFx, AppGate, Route
 } from './'
 
 import { fetchUsersFx } from '../users'
@@ -52,4 +52,11 @@ forward({
 
 Route.state.updates.watch(({name}) => {
 	history.pushState({}, '', `/${name}`)
+})
+
+app.onCreateEffect(fx => {
+  fx.failData.watch(err => {
+    console.error(`Error in ${fx.shortName}`)
+    console.error(err)
+  })
 })

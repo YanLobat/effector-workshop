@@ -1,12 +1,12 @@
-import {createStore, createEvent} from 'effector'
+import { app } from '../app'
 
-export const updateCurrentIDandStage = createEvent<{ ID: string, stage: number }>()
+export const updateCurrentIDandStage = app.createEvent<{ ID: string, stage: number }>()
 
 export const updateStage = updateCurrentIDandStage.map(({ stage }) => stage)
 
-export const $currentConnectID = createStore<string>('first-table')
+export const $currentConnectID = app.createStore<string>('first-table')
 
-export const $tableIDs = createStore<string[]>([
+export const $tableIDs = app.createStore<string[]>([
   'first-table',
   'second-table',
   'third-table',
@@ -30,6 +30,6 @@ export const $tableIDs = createStore<string[]>([
 
 export const $tablesCount = $tableIDs.map((ids) => ids.length)
 
-export const $tableCapacity = createStore(6)
+export const $tableCapacity = app.createStore(6)
 
-export const $stage = createStore(2)
+export const $stage = app.createStore(2)

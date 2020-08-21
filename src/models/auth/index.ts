@@ -1,34 +1,34 @@
-import { createEvent, createEffect, createStore } from 'effector'
+import { app } from '../app'
 
 import { User, Credentials } from './types'
 
-export const gSignIn = createEvent()
+export const gSignIn = app.createEvent()
 
-export const signIn = createEvent<Credentials>()
+export const signIn = app.createEvent<Credentials>()
 
-export const logout = createEvent<string>()
+export const logout = app.createEvent<string>()
 
-export const updateSignInForm = createEvent<{ value: string; fieldName: string }>()
+export const updateSignInForm = app.createEvent<{ value: string; fieldName: string }>()
 
-export const checkAuth = createEvent<User | null>()
+export const checkAuth = app.createEvent<User | null>()
 
-export const restoredAuth = createEvent<User>()
+export const restoredAuth = app.createEvent<User>()
 
-export const manageGmailProviderFx = createEffect<void, User>()
+export const manageGmailProviderFx = app.createEffect<void, User>()
 
-export const manageEmailProviderFx = createEffect<Credentials, User>()
+export const manageEmailProviderFx = app.createEffect<Credentials, User>()
 
-export const signUpViaEmailFx = createEffect<Credentials, { email: string }>()
+export const signUpViaEmailFx = app.createEffect<Credentials, { email: string }>()
 
-export const checkAuthFx = createEffect<void, unknown>()
+export const checkAuthFx = app.createEffect<void, unknown>()
 
-export const dropUserAuthFx = createEffect<string, unknown>()
+export const dropUserAuthFx = app.createEffect<string, unknown>()
 
-export const $user = createStore<User>({
+export const $user = app.createStore<User>({
   email: ''
 })
 
-export const $signInForm = createStore<Credentials>({
+export const $signInForm = app.createStore<Credentials>({
   email: '',
   password: ''
 })

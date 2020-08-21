@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "parcel public/index.html --no-cache",
-    "build": "parcel build -d dist --no-autoinstall --public-url /try public/index.html"
+    "build": "parcel build -d dist --no-autoinstall --public-url /try public/index.html",
+    "build:server": "parcel build --target=node ./emulation.ts",
+    "start:server": "node dist/emulataion"
   },
   "keywords": [
     "effector"

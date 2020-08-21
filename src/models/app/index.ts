@@ -1,11 +1,13 @@
-import {createEffect} from 'effector'
+import {createDomain} from 'effector'
 import { createGate } from 'effector-react'
 
 import { Config } from './types'
 
-export const initAppFx = createEffect<Config, unknown>()
+export const app = createDomain()
 
-export const showErrorFx = createEffect<string, unknown>()
+export const initAppFx = app.createEffect<Config, unknown>()
+
+export const showErrorFx = app.createEffect<string, unknown>()
 
 export const AppGate = createGate()
 

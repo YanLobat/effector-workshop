@@ -1,5 +1,5 @@
-import {createEvent, createStore} from 'effector'
+import { app } from '../app'
 
-export const redirect = createEvent<string>()
+export const redirect = app.createEvent<string>()
 
-export const $router = createStore<string[]>([])
+export const $router = app.createStore<string[]>([])
