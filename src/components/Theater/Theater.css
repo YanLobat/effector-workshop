@@ -1,0 +1,61 @@
+.remo-theater{
+  margin-left: -378px;
+  margin-top: -300px;
+}
+.rt-app-bar {
+  padding: 1rem;
+  position: fixed;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-left: 378px;
+  margin-top: 300px;
+  z-index: 1;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.rt-rooms {
+  position: absolute;
+  z-index: 1;
+}
+.rt-room {
+  position: absolute;
+  cursor: pointer;
+}
+.rt-room-name {
+  font-size: 0.875rem;
+  background: #fff;
+  position: absolute;
+  bottom: 0;
+  text-align: center;
+  width: 100%;
+}
+
+.rt-room:hover {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+.rt-background {
+  position: absolute;
+}
+.rt-background img {
+  object-fit: cover;
+}
+.email {
+  margin-left: 8px;
+  margin-right: 15px;
+}
+.rt-seat {
+  position: absolute;
+  width: 51px;
+  height: 51px;
+  border-radius: 50%;
+  border: 2px solid green;
+  overflow: hidden;
+}
+.seat-person {
+  display: block;
+  width: 100%;
+  height: 100%;
+}

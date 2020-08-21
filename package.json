@@ -1,0 +1,40 @@
+{
+  "name": "effector-workshop",
+  "version": "0.1.0",
+  "description": "Educational app based on effector",
+  "main": "index.js",
+  "scripts": {
+    "start": "parcel public/index.html --no-cache",
+    "build": "parcel build -d dist --no-autoinstall --public-url /try public/index.html"
+  },
+  "keywords": [
+    "effector"
+  ],
+  "author": "YanLobat",
+  "license": "MIT",
+  "dependencies": {
+    "@types/react": "^16.9.46",
+    "effector": "^21.2.0",
+    "effector-react": "^21.0.4",
+    "firebase": "^7.18.0",
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.11.0",
+    "@babel/plugin-transform-runtime": "^7.10.5",
+    "@babel/plugin-transform-strict-mode": "^7.2.0",
+    "@babel/preset-env": "^7.4.3",
+    "@babel/preset-react": "^7.0.0",
+    "@babel/preset-typescript": "^7.10.4",
+    "@babel/standalone": "^7.4.3",
+    "@babel/register": "^7.10.5",
+    "parcel-bundler": "^1.12.3",
+    "typescript": "^3.9.7"
+  },
+  "browserslist": [
+    "last 2 Chrome versions",
+    "last 2 Firefox versions",
+    "last 2 Safari versions"
+  ]
+}
