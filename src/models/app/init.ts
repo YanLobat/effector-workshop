@@ -2,7 +2,7 @@ import { initializeApp } from 'firebase'
 import { forward } from 'effector'
 
 import {
-  initAppFx, AppGate, Route
+  initAppFx, showErrorFx, AppGate, Route
 } from './'
 
 import { fetchUsersFx } from '../users'
@@ -32,6 +32,10 @@ initAppFx.use(async ({
     databaseURL: `https://${projectId}.firebaseio.com`,
     storageBucket: `${projectId}.appspot.com`
   })
+})
+
+showErrorFx.use((text) => {
+  alert(text)
 })
 
 initAppFx({

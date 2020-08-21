@@ -2,6 +2,8 @@ import {createStore, createEvent} from 'effector'
 
 export const updateCurrentIDandStage = createEvent<{ ID: string, stage: number }>()
 
+export const updateStage = updateCurrentIDandStage.map(({ stage }) => stage)
+
 export const $currentConnectID = createStore<string>('first-table')
 
 export const $tableIDs = createStore<string[]>([
@@ -25,5 +27,9 @@ export const $tableIDs = createStore<string[]>([
   'left-bottom-table',
   'right-bottom-table'
 ])
+
+export const $tablesCount = $tableIDs.map((ids) => ids.length)
+
+export const $tableCapacity = createStore(6)
 
 export const $stage = createStore(2)

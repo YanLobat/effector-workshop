@@ -1,15 +1,17 @@
-import {forward, sample} from 'effector'
+import {forward, sample, guard} from 'effector'
 
 import {
   updateCurrentIDandStage,
+  updateStage,
   $currentConnectID,
   $tableIDs,
-  $stage
-} from './index'
+  $stage,
+  $tableCapacity
+} from './'
 
 import {
   $tableUsers
-} from '../users/index'
+} from '../users'
 
 sample({
   source: {
@@ -37,7 +39,12 @@ forward({
   to: $currentConnectID
 })
 
-forward({
-  from: updateCurrentIDandStage.map(({stage}) => stage),
-  to: $stage
+guard({
+  source: updateStage,
+  filter: sample({
+    source: $tableCapacity,
+    clock: updateStage,
+    fn: (capacity, stage) => stage <= capacity
+  }),
+  target: $stage
 })

@@ -1,4 +1,4 @@
-import { forward, sample, guard } from 'effector'
+import { forward, sample, guard, merge } from 'effector'
 import { auth } from 'firebase'
 
 import {
@@ -19,11 +19,19 @@ import {
 
 import {
   addUserFx,
-  updateUsersTableFx,
   deleteUserFx,
-  $firebaseUsers,
-  $usersByEmail
+  $usersByEmail,
+  $usersCount
 } from '../users'
+
+import {
+  $tableCapacity,
+  $tablesCount
+} from '../tables'
+
+import {
+  showErrorFx
+} from '../app'
 
 import { User } from './types'
 
@@ -80,14 +88,33 @@ $signInForm
   [fieldName]: value
 }))
 
-forward({
-  from: gSignIn,
-  to: manageGmailProviderFx
+const $canUserEnter = sample({
+  source: {
+    count: $tablesCount,
+    capacity: $tableCapacity
+  },
+  clock: $usersCount,
+  fn: ({ count, capacity }, usersCount) => count * capacity > usersCount
 })
 
-forward({
-  from: signIn,
-  to: manageEmailProviderFx
+const $cantUserEnter = $canUserEnter.map((can) => !can)
+
+guard({
+  source: gSignIn,
+  filter: $canUserEnter,
+  target: manageGmailProviderFx
+})
+
+guard({
+  source: signIn,
+  filter: $canUserEnter,
+  target: manageEmailProviderFx
+})
+
+guard({
+  source: merge([signIn, gSignIn]).map(() => 'Theater is full! Try to login later.'),
+  filter: $cantUserEnter,
+  target: showErrorFx
 })
 
 forward({
@@ -100,17 +127,19 @@ forward({
   to: signUpViaEmailFx
 })
 
+const foundPrevLogInUser = sample({
+  source: $usersByEmail,
+  clock: [
+    manageGmailProviderFx.doneData,
+    signUpViaEmailFx.doneData,
+    manageEmailProviderFx.doneData
+  ],
+  fn: (users, user) => users[user.email]
+})
+
 sample({
   source: guard({
-    source: sample({
-      source: $usersByEmail,
-      clock: [
-        manageGmailProviderFx.doneData,
-        signUpViaEmailFx.doneData,
-        manageEmailProviderFx.doneData
-      ],
-      fn: (users, user) => users[user.email]
-    }),
+    source: foundPrevLogInUser,
     filter: Boolean
   }),
   fn: (user) => user.id!,

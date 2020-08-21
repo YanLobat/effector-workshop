@@ -40,3 +40,7 @@ export const $tableUsers = $firebaseUsers.map((fUsers) => {
     }
   }, {})
 })
+
+export const $usersCount = $firebaseUsers.map((fUsers) =>
+  Object.keys(fUsers).length
+)
