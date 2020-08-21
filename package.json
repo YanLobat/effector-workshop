@@ -7,7 +7,8 @@
     "start": "parcel public/index.html --no-cache",
     "build": "parcel build -d dist --no-autoinstall --public-url /try public/index.html",
     "build:server": "parcel build --target=node ./emulation.ts",
-    "start:server": "node dist/emulataion"
+    "start:server": "node dist/emulataion",
+    "test": "jest --runInBand --detectOpenHandles"
   },
   "keywords": [
     "effector"
@@ -15,10 +16,12 @@
   "author": "YanLobat",
   "license": "MIT",
   "dependencies": {
+    "@types/jest": "^26.0.10",
     "@types/react": "^16.9.46",
     "effector": "^21.2.0",
     "effector-react": "^21.0.4",
     "firebase": "^7.18.0",
+    "jest": "^26.4.1",
     "react": "^16.9.0",
     "react-dom": "^16.9.0"
   },

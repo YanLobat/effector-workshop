@@ -12,10 +12,12 @@ export const deleteUserFx = app.createEffect<string, unknown>()
 
 export const $firebaseUsers = app.createStore<UsersMap>({});
 export const $users = $firebaseUsers.map((fUsers) =>
-  Object.keys(fUsers).map((id) => fUsers[id])
+  fUsers === null ? [] :  Object.keys(fUsers).map((id) => fUsers[id])
 )
 export const $usersByEmail = $firebaseUsers.map((fUsers) => {
-  return Object.keys(fUsers).reduce<UsersMap>((usersByEmail, id) => {
+  return fUsers === null
+    ? {}
+    : Object.keys(fUsers).reduce<UsersMap>((usersByEmail, id) => {
     const email = fUsers[id].email;
     return {
       [email]: {
@@ -28,7 +30,7 @@ export const $usersByEmail = $firebaseUsers.map((fUsers) => {
 })
 
 export const $tableUsers = $firebaseUsers.map((fUsers) => {
-  return Object.keys(fUsers).reduce<TableIDUsersMap>((tableUsers, id) => {
+  return fUsers === null ? {} : Object.keys(fUsers).reduce<TableIDUsersMap>((tableUsers, id) => {
     const tableID = fUsers[id].tableID;
     if (tableUsers[tableID] !== undefined) {
       tableUsers[tableID].push(fUsers[id]);
@@ -42,5 +44,5 @@ export const $tableUsers = $firebaseUsers.map((fUsers) => {
 })
 
 export const $usersCount = $firebaseUsers.map((fUsers) =>
-  Object.keys(fUsers).length
+  fUsers === null ? 0 : Object.keys(fUsers).length
 )
