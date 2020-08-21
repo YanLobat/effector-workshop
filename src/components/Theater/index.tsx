@@ -6,7 +6,25 @@ import './Theater.css'
 import MapImage from '../../assets/conference-map.svg'
 import {tables, width, height} from './tableConfig.json'
 
-import {$user, logout} from '../../models/auth'
+import { $user, logout } from '../../models/auth'
+import { $users, changeUserTable } from '../../models/users'
+
+const Seats:React.FC<{ id: string; seats: {
+  x: number;
+  y: number;
+}[]}> = ({id, seats}) => {
+  const users = useStore($users)
+  const seatedUsers = users.filter(({tableID}) => tableID === id);
+  return (
+    <>
+      {seatedUsers.map((user, index) => (
+        <div key={index} className='rt-seat' style={{ top: seats[index].y, left: seats[index].x }}>
+          <img className='seat-person' src={user.avatar} alt='person avatar' />
+        </div>
+      ))}
+    </>
+  )
+}
 
 const Rooms:React.FC = () => (
   <>
@@ -15,7 +33,9 @@ const Rooms:React.FC = () => (
         key={index}
         className='rt-room'
         style={{ width, height, top: y, left: x }}
+        onClick={() => changeUserTable(id)}
       >
+        <Seats id={id} seats={seats}/>
         <div className='rt-room-name'>{id}</div>
       </div>
     ))}
