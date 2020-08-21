@@ -21,7 +21,7 @@ export const $usersByEmail = $firebaseUsers.map((fUsers) => {
       [email]: {
         id,
         ...fUsers[id]
-      }
+      },
       ...usersByEmail
     }
   }, {})
