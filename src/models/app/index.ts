@@ -6,3 +6,5 @@ import { Config } from './types'
 export const initAppFx = createEffect<Config, unknown>()
 
 export const AppGate = createGate()
+
+export const Route = createGate<{name: string}>()

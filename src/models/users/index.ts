@@ -15,7 +15,7 @@ export const $users = $firebaseUsers.map((fUsers) =>
   Object.keys(fUsers).map((id) => fUsers[id])
 )
 export const $usersByEmail = $firebaseUsers.map((fUsers) => {
-  return Object.keys(fUsers).reduce((usersByEmail, id) => {
+  return Object.keys(fUsers).reduce<UsersMap>((usersByEmail, id) => {
     const email = fUsers[id].email;
     return {
       [email]: {

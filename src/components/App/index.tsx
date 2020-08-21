@@ -5,11 +5,16 @@ import './App.css'
 import { Theater } from '../Theater'
 import { Auth } from '../Auth'
 
-import { $user } from '../../models/auth'
-import {AppGate} from '../../models/app'
+import {$router} from '../../models/router'
+import {AppGate, Route} from '../../models/app'
 
 export const App = () => {
   useGate(AppGate)
-  const {email} = useStore($user)
-  return email ? (<Theater />) : (<Auth />)
+  const [, route] = useStore($router)
+  useGate(Route, { name: route ? route : '' })
+  
+  if (route === 'theater') {
+    return <Theater />
+  }
+  return <Auth />
 }

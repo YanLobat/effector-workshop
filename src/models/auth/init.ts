@@ -1,4 +1,4 @@
-import { forward, sample } from 'effector'
+import { forward, sample, guard } from 'effector'
 import { auth } from 'firebase'
 
 import {
@@ -6,9 +6,13 @@ import {
   signIn,
   logout,
   updateSignInForm,
+  checkAuth,
+  restoredAuth,
   manageGmailProviderFx,
   manageEmailProviderFx,
   signUpViaEmailFx,
+  checkAuthFx,
+  dropUserAuthFx,
   $user,
   $signInForm
 } from './'
@@ -17,8 +21,11 @@ import {
   addUserFx,
   updateUsersTableFx,
   deleteUserFx,
-  $firebaseUsers
+  $firebaseUsers,
+  $usersByEmail
 } from '../users'
+
+import { User } from './types'
 
 const gProvider = new auth.GoogleAuthProvider()
 
@@ -43,10 +50,22 @@ signUpViaEmailFx.use(async ({email, password}) => {
   return {email}
 })
 
+checkAuthFx.use(() => {
+  auth().onAuthStateChanged(value => {
+    if (value !== null) {
+      checkAuth(value as User)
+    }
+  })
+})
+
+dropUserAuthFx.use(async () => {
+  await auth().signOut()
+})
+
 $user
 .reset(logout)
 .on([
-  manageGmailProviderFx.doneData, signUpViaEmailFx.doneData, manageEmailProviderFx.doneData
+  manageGmailProviderFx.doneData, signUpViaEmailFx.doneData, manageEmailProviderFx.doneData, restoredAuth
   ],
   (_, user) => user
 )
@@ -82,13 +101,32 @@ forward({
 })
 
 sample({
-  source: $firebaseUsers,
-  clock: logout,
-  //@ts-ignore
-  fn: (users, email) => Object.keys(users).find((id) => {
-    if (email === users[id].email) {
-      return id
+  source: guard({
+    source: sample({
+      source: $usersByEmail,
+      clock: [
+        manageGmailProviderFx.doneData,
+        signUpViaEmailFx.doneData,
+        manageEmailProviderFx.doneData
+      ],
+      fn: (users, user) => users[user.email]
+    }),
+    filter: Boolean
+  }),
+  fn: (user) => user.id!,
+  target: deleteUserFx
+})
+
+forward({
+  from: logout,
+  to: dropUserAuthFx
+})
+
+forward({
+  from: checkAuth.filterMap((user) => {
+    if (user !== null) {
+      return user
     }
   }),
-  target: deleteUserFx
+  to: restoredAuth
 })

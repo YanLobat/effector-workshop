@@ -2,10 +2,12 @@ import { initializeApp } from 'firebase'
 import { forward } from 'effector'
 
 import {
-  initAppFx, AppGate
+  initAppFx, AppGate, Route
 } from './'
 
 import { fetchUsersFx } from '../users'
+
+import { checkAuthFx } from '../auth'
 
 import {
   appId,
@@ -41,5 +43,9 @@ initAppFx({
 
 forward({
   from: AppGate.open,
-  to: fetchUsersFx
+  to: [fetchUsersFx, checkAuthFx]
+})
+
+Route.state.updates.watch(({name}) => {
+	history.pushState({}, '', `/${name}`)
 })
