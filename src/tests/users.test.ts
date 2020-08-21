@@ -2,15 +2,23 @@
 import { fork, allSettled, Scope } from 'effector'
 
 import '../models/init'
-import {app} from '../models/app'
+import { app } from '../models/app'
+import {dropUsersFx} from '../models/users'
 import { signIn, $user } from '../models/auth'
+
+beforeEach((done) => {
+  dropUsersFx().then(() => done())
+});
+
+afterEach((done) => {
+  dropUsersFx().then(() => done())
+})
 
 test('should drop previous session if new login from same user', async () => {
   const expected = {email: 'test@test.com'}
   const payload = { password: '123456', ...expected }
 
   const scope = fork(app)
-  const scope2 = fork(app)
   await allSettled(signIn, {
     scope: scope,
     params: payload

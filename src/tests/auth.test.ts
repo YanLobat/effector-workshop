@@ -3,8 +3,17 @@ import { fork, allSettled, Scope } from 'effector'
 import '../models/init'
 import {app} from '../models/app'
 import { signIn, logout, dropUserAuthFx, checkAuthFx, $user } from '../models/auth'
+import {dropUsersFx} from '../models/users'
 
 let scope: Scope
+
+beforeEach((done) => {
+  dropUsersFx().then(() => done())
+});
+
+afterEach((done) => {
+  dropUsersFx().then(() => done())
+})
 
 test('should sign in via email and password', async () => {
   const expected = {email: 'test@test.com'}

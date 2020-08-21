@@ -9,6 +9,7 @@ export const fetchUsersFx = app.createEffect<void, UsersMap>()
 export const addUserFx = app.createEffect<FirebaseUser, string[]>()
 export const updateUsersTableFx = app.createEffect<{ id: string;  tableID: string}, unknown>()
 export const deleteUserFx = app.createEffect<string, unknown>()
+export const dropUsersFx = app.createEffect<void, unknown>()
 
 export const $firebaseUsers = app.createStore<UsersMap>({});
 export const $users = $firebaseUsers.map((fUsers) =>

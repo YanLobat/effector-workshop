@@ -9,6 +9,7 @@ import {
   fetchUsersFx,
   deleteUserFx,
   updateUsersTableFx,
+  dropUsersFx,
   $firebaseUsers,
   $usersByEmail,
   $tableUsers
@@ -31,6 +32,7 @@ import {
 } from '../app'
 
 const usersRef = database().ref('users/');
+
 usersRef.on('value', (snapshot) => updateUsers(snapshot.val() === null ? {} : snapshot.val()))
 
 addUserFx.use(async (user) => {
@@ -50,6 +52,10 @@ updateUsersTableFx.use(async ({id, tableID}) => {
 
 deleteUserFx.use(async (id) => {
   await database().ref('users/'+id).remove()
+})
+
+dropUsersFx.use(async () => {
+  await usersRef.remove()
 })
 
 $firebaseUsers

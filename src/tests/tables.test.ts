@@ -4,10 +4,18 @@ import { fork, allSettled, Scope } from 'effector'
 import '../models/init'
 import {app, showErrorFx} from '../models/app'
 import { signIn } from '../models/auth'
-import { fetchUsersFx, $firebaseUsers, updateUsersTableFx, addUserFx } from '../models/users'
+import { fetchUsersFx, $firebaseUsers, updateUsersTableFx, dropUsersFx, changeUserTable } from '../models/users'
 import { $tableCapacity } from '../models/tables'
 
 let scope: Scope
+
+beforeEach((done) => {
+  dropUsersFx().then(() => done())
+});
+
+afterEach((done) => {
+  dropUsersFx().then(() => done())
+})
 
 test('should fail to change table if table is full', async () => {
   const emails = [
@@ -16,9 +24,9 @@ test('should fail to change table if table is full', async () => {
     'temmink@gmail.com',
     'rfoley@att.net',
     'yruan@me.com',
-    'parents@gmail.com',
-    'shrapnull@att.net',
+    'parents@gmail.com'
   ]
+  const userEmail =  'shrapnull@att.net'
   const password = '123456'
   const showErrorMock = jest.fn()
   scope = fork(app, {
@@ -40,8 +48,19 @@ test('should fail to change table if table is full', async () => {
       params: { id, tableID: 'first-table' }
     })
   })])
-  console.log(scope.getState($tableCapacity), Object.keys(users).length)
-  expect(scope.getState($tableCapacity)).toBeLessThan(Object.keys(users).length)
+
+  await allSettled(signIn, {
+    scope: scope,
+    params: {email: userEmail, password}
+  })
+
+  const allUsers = scope.getState($firebaseUsers)
+  await allSettled(changeUserTable, {
+    scope: scope,
+    params: 'first-table' 
+  })
+
+  expect(scope.getState($tableCapacity)).toBeLessThan(Object.keys(allUsers).length)
   expect(showErrorMock).toHaveBeenCalledTimes(1)
   expect(showErrorMock).toHaveBeenCalledWith('Table is full. You shall not pass!')
 })
