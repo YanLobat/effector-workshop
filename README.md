@@ -3,6 +3,8 @@
 This is an educational app based on effector. We'll go step by step building it from starter boilerplate.
 It's about small MVP for conference rooms.
 
+[RU] (Workshop video)[https://youtu.be/sn9yszY7gn0?t=1568]
+
 ## Functionality
 
 - Google login/email login to authenticate user
